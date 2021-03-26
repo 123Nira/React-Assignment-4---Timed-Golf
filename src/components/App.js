@@ -3,90 +3,99 @@ import "../styles/App.css";
 class Timer extends React.Component {
   constructor(props) {
     super(props);
-     this.state = { time: 0, x: 0, y: 0,gameHasStarted:true,oclick:false,timer:0,reachedTodestiny:false };
+    this.state = { 
+      time: 0, 
+      x: 0, 
+      y: 0,
+      renderBall: false,
+    };
+    this.handleClick = this.handleClick.bind(this);
+    this.timmer = this.timmer.bind(this);
 
-        this.keyHandling=this.keyHandling.bind(this);
-        this.buttonIsClicked=this.buttonIsClicked.bind(this);
-        
-      }
+  }
+
+
+  componentDidMount() {
+        window.addEventListener('keydown', (e) => {
+          switch (e.key) {
+              case 'ArrowRight':
+                this.setState({
+                    x: this.state.x + 5,
+                    y: this.state.y + 0,
+                })
+                break;
+
+              case 'ArrowDown':
+                this.setState({
+                  x: this.state.x + 0,
+                  y: this.state.y + 5,
+                })
+                
+                break;
+
+              case 'ArrowLeft':
+                this.setState({
+                  x: this.state.x - 5,
+                  y: this.state.y + 0,
+                })
+                break;
+
+              case 'ArrowUp':
+                this.setState({
+                  x: this.state.x + 0,
+                  y: this.state.y - 5,
+                })
+                break;
+          }
+      });
+
       
-
-      keyHandling(e){
-        if(this.state.x===250 && this.state.y===250)
-        {
-            this.setState({gameHasStarted:false})
-            clearInterval(this.state.timer)
-            
-            
-        }
-        else if(this.state.time!==0)
-        {
-          if(e.keyCode===39)
-            {
-                let xVal=this.state.x+5;
-                this.setState({x:xVal})
-            }
-
-            if(e.keyCode===37)
-            {
-                let xVal=this.state.x-5;
-                this.setState({x:xVal});
-            }
-
-            if(e.keyCode===40)
-            {
-                let yVal=this.state.y+5;
-                this.setState({y:yVal})
-            }
-
-            if(e.keyCode===38)
-            {
-                let yVal=this.state.y-5;
-                this.setState({y:yVal})
-            }
-        }
-        }  
-      componentDidMount() {
-        window.addEventListener("keydown",this.keyHandling)
-      }
-    
-      componentWillUnmount() {
-        
-       
-       
+      if(this.state.x == 250 && this.state.y == 250){
+        console.log("I AM FROM IF");
+        window.clearInterval(interval);
       }
 
-      componentDidUpdate(){
-      }
-     
-      
-      buttonIsClicked(){
+  }
 
-    
-        if(this.state.oclick===false)
-        {
-            this.setState({oclick:true})
-       if(this.state.gameHasStarted===true)
-       {
-        this.state.timer=setInterval(()=>{
-            this.state.time=this.state.time+1
-            this.setState({time:this.state.time});
-        },1000)
-       }
+  componentWillUnmount() {
+    this.setState({
+      time : 0,
+      // renderBall: false,
+    })
+  }
+
+  timmer(){
+
+    if(this.state.x!=250 && this.state.y!=250){
+      this.setState({
+        time: this.state.time + 1,
+      })
     }
-       
-        
-      }
+    else{
+      
+    }
+  }
+
+
+  handleClick(){
+    // console.log("Start Button Clicked");
+    var interval = window.setInterval(this.timmer,1000);
+
+    this.setState({
+      renderBall : true,
+    })
+  }
+
 
   render() {
     return (
- <>
-      <button className="start" onClick={  
-         this.buttonIsClicked}>Start</button>
-     <div className="heading-timer">{this.state.time}</div>
-     <div className="ball" style={{left:this.state.x,top:this.state.y}}></div>
-     <div className="hole"></div>       
-</>
+      <>
+        <div className="ball" style={{left : this.state.x + "px" , top : this.state.y + "px"}}></div>
+        <div className="hole"></div>
+        <h1 className="heading-timer">{this.state.time}</h1>
+        <button className="start" onClick={this.handleClick}>Start</button>
+
+      </>
     );
   }
 }
